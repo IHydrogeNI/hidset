@@ -38,7 +38,7 @@ or run `build.ps1`, which looks for llvm-mingw in `%LOCALAPPDATA%`.
 | Script | Purpose |
 |---|---|
 | `cleanup.ps1` | One-off: uninstalls GG and Synapse, deletes their driver packages, blocks GG's reinstall hooks, runs `hidset.exe`, blocks the mouse control channel. Creates a restore point first. |
-| `mouse-channel.ps1 block\|unblock` | Blocks the Rival 600's settings/lighting interface (`HID\VID_1038&PID_1724&MI_00`) with the device-installation policy, so no program can change its lights. The mouse keeps working. Unblock before running `hidset.exe` for mouse changes. |
+| `mouse-channel.ps1 block\|unblock` | Blocks the Rival 600's settings/lighting interface (`USB\VID_1038&PID_1724&MI_00`) with the device-installation policy, so no program can change its lights. The mouse keeps working. Unblock before running `hidset.exe` for mouse changes. The USB interface is denied, not its HID collection: HID collections are raw devices that stay openable even when their install is blocked. |
 | `hide-updates.ps1 [-Show]` | Hides SteelSeries and Razer driver offers in Windows Update. Re-run when a new version is offered. |
 
 ### Why the blocks matter
@@ -66,7 +66,9 @@ disabling the device, which is what `hide-updates.ps1` is for.
   (usage `01:02`, transaction ID `0x9F`), wired on interface 3 (usage `0C:01`,
   `0x1F`), as detected by [OpenRGB](https://gitlab.com/CalcProgrammer1/OpenRGB).
   Static effect `0F:02`, brightness `0F:04` / `0F:84`, both in VARSTORE so they
-  persist. Bluetooth mode is not supported.
+  persist. Over Bluetooth LE (`02068E:0291`) the keyboard exposes no Razer
+  feature report, so it cannot be configured there, but it keeps one lighting
+  state for USB, dongle and Bluetooth: set it once over USB or the dongle.
 
 Unofficial; not affiliated with SteelSeries or Razer.
 
